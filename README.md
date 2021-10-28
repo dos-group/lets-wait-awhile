@@ -17,7 +17,7 @@ For executing the code you need to install the libraries listed in `environment.
 
 If you use any datasets or code from this repository, please reference our publication:
 
-- Philipp Wiesner, Ilja Behnke, Dominik Scheinert,  Kordian Gontarska, and Lauritz Thamsen. "Let's Wait Awhile: How Temporal Workload Shifting Can Reduce Carbon Emissions in the Cloud" In the Proceedings of the *22nd International Middleware Conference*, ACM, 2021.
+- Philipp Wiesner, Ilja Behnke, Dominik Scheinert,  Kordian Gontarska, and Lauritz Thamsen. "[Let's Wait Awhile: How Temporal Workload Shifting Can Reduce Carbon Emissions in the Cloud](https://arxiv.org/pdf/2110.13234.pdf)" In the Proceedings of the *22nd International Middleware Conference*, ACM, 2021.
 
 BibTeX:
 ```
