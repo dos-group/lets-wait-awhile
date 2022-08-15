@@ -1,4 +1,5 @@
 from multiprocessing import Pool
+from os import makedirs
 from typing import List, Iterator, Tuple
 
 import numpy as np
@@ -7,7 +8,7 @@ import simpy
 from datetime import timedelta
 
 from leaf.infrastructure import Infrastructure, Node
-from leaf.power import PowerMeter, PowerModelNodeShared
+from leaf.power import PowerMeter, PowerModelNode
 
 from strategy import Strategy, BidirectionalStrategy, AdHocStrategy
 
@@ -20,8 +21,9 @@ Job = Tuple[int, int, int]  # id, arrival time, duration
 
 def main(node, ci, jobs: List[Job], strategy: Strategy):
     env = simpy.Environment()
+    power_meter = PowerMeter(node, measurement_interval=MEASUREMENT_INTERVAL)
     env.process(datacenter_process(env, jobs, strategy))
-    power_meter = PowerMeter(env, node, measurement_interval=MEASUREMENT_INTERVAL, delay=0.01)
+    env.process(power_meter.run(env))
     # print(f"Starting simulation with strategy {strategy}...")
     env.run(until=len(ci) * MEASUREMENT_INTERVAL)
 
@@ -72,7 +74,7 @@ def periodic_experiment(error, max_steps_window: int = 17):
         ci = ci[ci.index.minute % MEASUREMENT_INTERVAL == 0]
 
         infrastructure = Infrastructure()
-        node = Node("dc", power_model=PowerModelNodeShared(power_per_mips=1))
+        node = Node("dc", power_model=PowerModelNode(power_per_cu=0.5))
         infrastructure.add_node(node)
 
         # daily at 1am
@@ -131,7 +133,7 @@ def ad_hoc_experiment(experiment_name: str,
 
     # Build infrastructure
     infrastructure = Infrastructure()
-    node = Node("dc", power_model=PowerModelNodeShared(power_per_mips=1))
+    node = Node("dc", power_model=PowerModelNode(power_per_cu=0.5))
     infrastructure.add_node(node)
 
     # Run experiment(s)
@@ -149,6 +151,8 @@ def ad_hoc_experiment(experiment_name: str,
     df = pd.DataFrame({"active_jobs": timeline, "ci": ci, "emissions": ci * timeline}, index=ci.index)
     i = "_i" if interruptible else ""
     e = f"_{error}" if error else ""
+    result_dir = f"results/"
+    makedirs(result_dir, exist_ok=True)
     with open(f"results/{experiment_name}_{forecast_method}{e}{i}_{country}.csv", "w") as csvfile:
         df.to_csv(csvfile)
 
@@ -204,9 +208,9 @@ def _apply_error(ci, error, seed):
 
 if __name__ == '__main__':
     # Scenario I
-    print("Starting Scenario 1...")
-    periodic_experiment(error=0)
-    periodic_experiment(error=0.05)
+    # print("Starting Scenario 1...")
+    # periodic_experiment(error=0)
+    # periodic_experiment(error=0.05)
 
     # Scenario II
     print("Starting Scenario 2...")
