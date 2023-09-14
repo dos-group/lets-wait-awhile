@@ -92,6 +92,8 @@ def periodic_experiment(error, max_steps_window: int = 17):
                 window_results.append(bidirectional_worker(node, jobs, ci, error, None, window))
         result[country] = window_results
 
+    if not os.path.exists("results"):
+        os.makedirs("results")
     with open(f"results/periodic_{error}.csv", "w") as csvfile:
         pd.DataFrame(result).to_csv(csvfile, index=False)
 
