@@ -48,9 +48,9 @@ class BidirectionalStrategy(Strategy):
                      f"then {self.ci[timeline_idx + wait_until]}).")
         yield env.timeout(wait_until * self.interval)
         logger.debug(f"{env.now}: Start run")
-        self.node.used_mips += 1
+        self.node.used_cu += 1
         yield env.timeout(duration)
-        self.node.used_mips -= 1
+        self.node.used_cu -= 1
         logger.debug(f"{env.now}: Finished run.")
 
 
@@ -90,9 +90,9 @@ class AdHocStrategy(Strategy):
                 last_index = index
 
                 yield env.timeout(wait_until * self.interval)
-                self.node.used_mips += 1
+                self.node.used_cu += 1
                 yield env.timeout(self.interval)
-                self.node.used_mips -= 1
+                self.node.used_cu -= 1
         else:
             # Calculate mean CI over the duration for every possible start step
             window_means = forecast.rolling(duration_steps).mean()[duration_steps - 1:]
@@ -101,9 +101,9 @@ class AdHocStrategy(Strategy):
 
             # Wait until the identified point in time and reserve the full duration
             yield env.timeout(wait_until * self.interval)
-            self.node.used_mips += 1
+            self.node.used_cu += 1
             yield env.timeout(duration)
-            self.node.used_mips -= 1
+            self.node.used_cu -= 1
 
     def _forecast_steps(self, timeline_idx: int, duration_steps: int) -> int:
         if isinstance(self.forecast, (int, float)):
