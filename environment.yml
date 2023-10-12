@@ -15,4 +15,4 @@ dependencies:
 
   - pip
   - pip:
-      - leafsim
+      - leafsim==0.4.2
