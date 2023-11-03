@@ -31,6 +31,10 @@ def main(
     power_meter = PowerMeter(node, measurement_interval=MEASUREMENT_INTERVAL)
     env.process(power_meter.run(env, delay=0.01))
     # print(f"Starting simulation with strategy {strategy}...")
+    #run_until = (
+    #    (pd.Timestamp(ci.index[-1]) - pd.Timestamp(ci.index[0])).total_seconds() / 60 +
+    #    MEASUREMENT_INTERVAL
+    #)
     env.run(until=len(ci) * MEASUREMENT_INTERVAL)
 
     # Watt usage at point in time
@@ -77,9 +81,9 @@ def adhoc_worker(
 ) -> np.ndarray:
     strategy = AdHocStrategy(
         node=node,
-        ci=_apply_error(ci, error, seed),
+        ci_df=_apply_error(ci, error, seed),
         interval=MEASUREMENT_INTERVAL,
-        forecast=forecast_method,
+        forecast_method=forecast_method,
         interruptible=interruptible
     )
     return main(node, ci, jobs, strategy)
@@ -95,7 +99,7 @@ def bidirectional_worker(
 ) -> float:
     strategy = BidirectionalStrategy(
         node=node,
-        ci=_apply_error(ci, error, seed),
+        ci_df=_apply_error(ci, error, seed),
         window_in_minutes=window * 30,
         interval=MEASUREMENT_INTERVAL
     )
@@ -291,9 +295,9 @@ def _apply_error(ci: pd.Series, error: float, seed: Optional[int]) -> pd.Series:
 
 if __name__ == '__main__':
     # Scenario I
-    print("Starting Scenario 1...")
-    periodic_experiment(error=0)
-    periodic_experiment(error=0.05)
+    #print("Starting Scenario 1...")
+    #periodic_experiment(error=0)
+    #periodic_experiment(error=0.05)
 
     # Scenario II
     print("Starting Scenario 2...")
