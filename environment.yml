@@ -16,3 +16,4 @@ dependencies:
   - pip
   - pip:
       - leafsim==0.4.2
+      - vessim==0.3.0
