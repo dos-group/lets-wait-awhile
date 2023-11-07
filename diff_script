@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Usage: ./diff_folders.sh /path/to/A /path/to/B
+
+# Check for correct number of arguments
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 /path/to/A /path/to/B"
+    exit 1
+fi
+
+# Assign the directory paths to variables
+dirA="$1"
+dirB="$2"
+
+# Loop through all files in directory A
+for file in "$dirA"/*; do
+  # Extract just the filename
+  filename=$(basename "$file")
+
+  # Check if the file exists in directory B
+  if [ -e "$dirB/$filename" ]; then
+    # Run diff on the pair of files
+    echo "Diffing $filename:"
+    diff "$dirA/$filename" "$dirB/$filename"
+    echo "--------------------------------"
+  fi
+done
