@@ -91,7 +91,7 @@ class AdHocStrategy(Strategy):
 
         if self.interruptible:
             # Get the <duration_steps> points in time with the lowest CI
-            worst_ci_to_include = forecast.sort_values()[duration_steps - 1]
+            worst_ci_to_include = forecast.sort_values().iloc[duration_steps - 1]
             # Get their indices in the forecast dataframe
             lowest_indices = np.where(forecast <= worst_ci_to_include)[0]
             last_index = None
