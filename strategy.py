@@ -59,7 +59,7 @@ class BidirectionalStrategy(Strategy):
 
         wait_minutes = (timestamp - start_time).total_seconds() / 60
         logger.debug(
-            f"{env.now}: Wait {wait_minutes}h (current: {start_time}, "
+            f"{env.now}: Wait {wait_minutes / 60}h (current: {start_time}, "
             f"then {start_time + pd.Timedelta(minutes=wait_minutes)})."
         )
         yield env.timeout(wait_minutes)
